@@ -1,9 +1,7 @@
 /**
  * Appearance: auto | day | night (localStorage `about-me-appearance-mode`)
- * - Auto: UI theme from local solar time in the weather payload when available;
- *   until then, uses prefers-color-scheme. Migrates legacy `about-me-theme`.
- * - Sky: `data-sky` + `data-astro` on <html> when weather loads (CSS gradients).
- * Weather is fetched via Netlify function `/.netlify/functions/weather` (see README).
+ * - Auto: sunrise <= now_utc < sunset from OpenWeather (via Netlify proxy).
+ *   Until weather loads, uses prefers-color-scheme. Migrates legacy `about-me-theme`.
  */
 (function () {
   "use strict";
@@ -55,91 +53,26 @@
     document.documentElement.dataset.theme = theme;
   }
 
-  function themeFromSolar(dt, sunrise, sunset) {
-    if (dt == null || sunrise == null || sunset == null) return null;
-    return dt >= sunrise && dt < sunset ? THEME_DAY : THEME_NIGHT;
+  function isDaytime(sunrise, sunset) {
+    if (sunrise == null || sunset == null) return null;
+    var nowSec = Math.floor(Date.now() / 1000);
+    return sunrise <= nowSec && nowSec < sunset;
   }
 
   function resolveEffectiveTheme() {
     if (state.mode === MODE_DAY) return THEME_DAY;
     if (state.mode === MODE_NIGHT) return THEME_NIGHT;
     var w = state.lastWeather;
-    if (w && w.sys && typeof w.dt === "number") {
-      var t = themeFromSolar(w.dt, w.sys.sunrise, w.sys.sunset);
-      if (t) return t;
+    if (w && w.sys) {
+      var daytime = isDaytime(w.sys.sunrise, w.sys.sunset);
+      if (daytime === true) return THEME_DAY;
+      if (daytime === false) return THEME_NIGHT;
     }
     return getSystemTheme();
   }
 
   function applyEffectiveTheme() {
     applyHtmlTheme(resolveEffectiveTheme());
-  }
-
-  function mapSkyBucket(main) {
-    if (!main) return "clear";
-    var m = String(main).toLowerCase();
-    if (m === "clear") return "clear";
-    if (m === "clouds") return "clouds";
-    if (m === "rain" || m === "drizzle") return "rain";
-    if (m === "thunderstorm") return "thunder";
-    if (m === "snow") return "snow";
-    if (
-      m === "mist" ||
-      m === "smoke" ||
-      m === "haze" ||
-      m === "dust" ||
-      m === "fog" ||
-      m === "sand" ||
-      m === "ash" ||
-      m === "squall" ||
-      m === "tornado"
-    ) {
-      return "fog";
-    }
-    return "clouds";
-  }
-
-  function clearSkyAttributes() {
-    var root = document.documentElement;
-    root.removeAttribute("data-sky");
-    root.removeAttribute("data-astro");
-  }
-
-  function applyWeatherVisual(w) {
-    var root = document.documentElement;
-    if (!w || !w.weather || !w.weather[0] || !w.sys || typeof w.dt !== "number") {
-      clearSkyAttributes();
-      return;
-    }
-    root.dataset.sky = mapSkyBucket(w.weather[0].main);
-    root.dataset.astro =
-      w.dt >= w.sys.sunrise && w.dt < w.sys.sunset ? "day" : "night";
-  }
-
-  function formatWeatherStatus(w) {
-    if (!w || !w.weather || !w.weather[0] || !w.sys || typeof w.dt !== "number") {
-      return "";
-    }
-    var raw = w.weather[0].description || w.weather[0].main || "Weather";
-    var desc =
-      raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
-    var astro =
-      w.dt >= w.sys.sunrise && w.dt < w.sys.sunset ? "Local day" : "Local night";
-    var place = w.name ? " · " + w.name : "";
-    return desc + " · " + astro + place;
-  }
-
-  function updateWeatherStatusEl(w) {
-    var el = document.getElementById("weather-status");
-    if (!el) return;
-    var text = formatWeatherStatus(w);
-    if (!text) {
-      el.textContent = "";
-      el.setAttribute("hidden", "hidden");
-      return;
-    }
-    el.textContent = text;
-    el.removeAttribute("hidden");
   }
 
   function syncRadios() {
@@ -180,15 +113,11 @@
       throw new Error(w && w.message ? String(w.message) : "weather error");
     }
     state.lastWeather = w;
-    applyWeatherVisual(w);
-    updateWeatherStatusEl(w);
     if (state.mode === MODE_AUTO) applyEffectiveTheme();
   }
 
   function handleWeatherError() {
     state.lastWeather = null;
-    clearSkyAttributes();
-    updateWeatherStatusEl(null);
     if (state.mode === MODE_AUTO) applyEffectiveTheme();
   }
 

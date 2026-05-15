@@ -220,9 +220,8 @@ code {
   inset: 0;
   pointer-events: none;
   z-index: -1;
-  background: var(--sky-wash, var(--hero-wash));
-  background-color: var(--bg-page);
-  opacity: 0.92;
+  background: var(--hero-wash);
+  opacity: 0.9;
   transition: opacity var(--transition-fast);
 }
 
@@ -230,89 +229,6 @@ code {
   .page-bg {
     transition: none;
   }
-}
-
-/* Weather-driven sky (inherits --sky-wash on <html> from these rules) */
-html[data-sky="clear"][data-astro="day"] {
-  --sky-wash:
-    radial-gradient(120% 85% at 8% -15%, rgb(251 191 36 / 0.55), transparent 58%),
-    radial-gradient(90% 65% at 92% 5%, rgb(125 211 252 / 0.4), transparent 52%),
-    linear-gradient(185deg, rgb(254 249 195 / 0.45), transparent 45%);
-}
-
-html[data-sky="clear"][data-astro="night"] {
-  --sky-wash:
-    radial-gradient(100% 80% at 70% -10%, rgb(30 58 138 / 0.55), transparent 55%),
-    radial-gradient(80% 60% at 10% 20%, rgb(251 191 36 / 0.12), transparent 50%),
-    linear-gradient(200deg, rgb(15 23 42 / 0.9), rgb(30 27 75 / 0.5));
-}
-
-html[data-sky="clouds"][data-astro="day"] {
-  --sky-wash:
-    radial-gradient(110% 90% at 50% -20%, rgb(148 163 184 / 0.45), transparent 55%),
-    radial-gradient(100% 70% at 0% 100%, rgb(203 213 225 / 0.35), transparent 50%),
-    linear-gradient(175deg, rgb(241 245 249 / 0.6), transparent 50%);
-}
-
-html[data-sky="clouds"][data-astro="night"] {
-  --sky-wash:
-    radial-gradient(120% 100% at 40% -30%, rgb(51 65 85 / 0.65), transparent 55%),
-    radial-gradient(90% 80% at 100% 50%, rgb(71 85 105 / 0.35), transparent 50%),
-    linear-gradient(195deg, rgb(15 23 42 / 0.95), rgb(30 41 59 / 0.6));
-}
-
-html[data-sky="rain"][data-astro="day"] {
-  --sky-wash:
-    radial-gradient(100% 80% at 20% -10%, rgb(100 116 139 / 0.4), transparent 55%),
-    radial-gradient(90% 70% at 90% 0%, rgb(56 189 248 / 0.25), transparent 50%),
-    linear-gradient(180deg, rgb(226 232 240 / 0.55), rgb(148 163 184 / 0.25));
-}
-
-html[data-sky="rain"][data-astro="night"] {
-  --sky-wash:
-    radial-gradient(110% 90% at 30% -25%, rgb(30 41 59 / 0.75), transparent 55%),
-    radial-gradient(100% 60% at 95% 30%, rgb(14 165 233 / 0.15), transparent 55%),
-    linear-gradient(200deg, rgb(2 6 23 / 0.95), rgb(30 58 138 / 0.45));
-}
-
-html[data-sky="thunder"][data-astro="day"] {
-  --sky-wash:
-    radial-gradient(90% 70% at 60% -15%, rgb(71 85 105 / 0.55), transparent 50%),
-    radial-gradient(70% 50% at 20% 10%, rgb(250 204 21 / 0.2), transparent 45%),
-    linear-gradient(185deg, rgb(203 213 225 / 0.5), rgb(51 65 85 / 0.35));
-}
-
-html[data-sky="thunder"][data-astro="night"] {
-  --sky-wash:
-    radial-gradient(100% 80% at 50% -20%, rgb(15 23 42 / 0.85), transparent 55%),
-    radial-gradient(60% 40% at 75% 15%, rgb(234 179 8 / 0.18), transparent 45%),
-    linear-gradient(195deg, rgb(2 6 23 / 0.98), rgb(30 27 75 / 0.55));
-}
-
-html[data-sky="snow"][data-astro="day"] {
-  --sky-wash:
-    radial-gradient(120% 90% at 50% -20%, rgb(255 255 255 / 0.55), transparent 55%),
-    radial-gradient(100% 70% at 0% 80%, rgb(186 230 253 / 0.35), transparent 50%),
-    linear-gradient(180deg, rgb(241 245 249 / 0.65), rgb(226 232 240 / 0.4));
-}
-
-html[data-sky="snow"][data-astro="night"] {
-  --sky-wash:
-    radial-gradient(110% 85% at 40% -15%, rgb(148 163 184 / 0.35), transparent 55%),
-    radial-gradient(90% 70% at 100% 0%, rgb(226 232 240 / 0.12), transparent 50%),
-    linear-gradient(195deg, rgb(15 23 42 / 0.95), rgb(51 65 85 / 0.4));
-}
-
-html[data-sky="fog"][data-astro="day"] {
-  --sky-wash:
-    radial-gradient(130% 100% at 50% -30%, rgb(203 213 225 / 0.55), transparent 60%),
-    linear-gradient(180deg, rgb(248 250 252 / 0.7), rgb(226 232 240 / 0.45));
-}
-
-html[data-sky="fog"][data-astro="night"] {
-  --sky-wash:
-    radial-gradient(130% 100% at 50% -30%, rgb(51 65 85 / 0.5), transparent 60%),
-    linear-gradient(195deg, rgb(15 23 42 / 0.92), rgb(71 85 105 / 0.35));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -468,20 +384,6 @@ html[data-sky="fog"][data-astro="night"] {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
   border-radius: 6px;
-}
-
-/* -------------------------------------------------------------------------- */
-/* Hero weather line                                                          */
-/* -------------------------------------------------------------------------- */
-.weather-status {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin: 0 0 1rem;
-  max-width: 52ch;
-}
-
-.weather-status[hidden] {
-  display: none;
 }
 
 /* -------------------------------------------------------------------------- */

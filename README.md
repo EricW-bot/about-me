@@ -1,16 +1,18 @@
 # About me (portfolio)
 
-Vanilla HTML, CSS, and JavaScript. The ambient background can reflect **live weather** and **local day/night** at the visitor’s location (via OpenWeatherMap), and you can choose **Auto**, **Day**, or **Night** appearance.
+Vanilla HTML, CSS, and JavaScript with **Auto**, **Day**, and **Night** appearance.
 
-## OpenWeather (required for deployed weather)
+## OpenWeather (for Auto mode on Netlify)
+
+**Auto** picks day or night using `sunrise <= now_utc < sunset` from OpenWeather’s `sys` fields for the visitor’s location (or Melbourne if geolocation is denied).
 
 1. Create a free API key at [OpenWeatherMap](https://openweathermap.org/api).
-2. In the Netlify dashboard: **Site configuration → Environment variables → Add a variable**  
+2. In Netlify: **Site configuration → Environment variables**  
    - Key: `OPENWEATHER_API_KEY`  
    - Value: your key  
-3. Deploy this site to **Netlify** so `/.netlify/functions/weather` is available.
+3. Deploy so `/.netlify/functions/weather` is available.
 
-The browser calls only the Netlify function; the key stays on the server. If you previously shared a key in chat or committed it anywhere, **rotate it** in the OpenWeather dashboard.
+The browser never sees the API key. Rotate any key that was ever committed or shared.
 
 ### Local development
 
@@ -19,11 +21,11 @@ npm i -g netlify-cli
 netlify dev
 ```
 
-Set `OPENWEATHER_API_KEY` in a root `.env` file (gitignored) or export it in your shell before `netlify dev`. Opening `index.html` directly from disk will not load weather (no function host).
+Set `OPENWEATHER_API_KEY` in a root `.env` file (gitignored). Opening `index.html` as a `file://` URL will not reach the function.
 
 ## Appearance modes
 
-- **Auto** — UI theme follows **local solar** day/night from the weather response when available; before that, uses your system light/dark preference.
-- **Day** / **Night** — Locks the UI theme; the sky background still updates from weather when the API returns data.
+- **Auto** — Day/night from sunrise/sunset when weather loads; otherwise your system light/dark preference.
+- **Day** / **Night** — Locks the UI theme.
 
-Preference is stored in `localStorage` under `about-me-appearance-mode` (`auto` | `day` | `night`).
+Stored in `localStorage` as `about-me-appearance-mode` (`auto` | `day` | `night`).
