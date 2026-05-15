@@ -515,6 +515,7 @@ html[data-theme="night"] .button--primary {
   padding: 0;
   display: grid;
   gap: 1.25rem;
+  align-items: stretch;
 }
 
 @media (min-width: 768px) {
@@ -531,11 +532,23 @@ html[data-theme="night"] .button--primary {
 
 .project-card {
   margin: 0;
+  display: flex;
+  min-height: 100%;
+}
+
+.project-card > article {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
 }
 
 .project-card__link {
-  display: block;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  min-height: 100%;
   border-radius: var(--radius-md);
   overflow: hidden;
   text-decoration: none;
@@ -575,6 +588,7 @@ html[data-theme="night"] .button--primary {
 }
 
 .project-card__visual {
+  flex-shrink: 0;
   height: 140px;
   background-size: cover;
 }
@@ -616,10 +630,14 @@ html[data-theme="night"] .button--primary {
 }
 
 .project-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 1.1rem 1.2rem 1.25rem;
 }
 
 .project-card__body p {
+  flex: 1;
   font-size: 0.98rem;
   margin-bottom: 0.75rem;
 }
