@@ -21,7 +21,11 @@ npm i -g netlify-cli
 netlify dev
 ```
 
-Set `OPENWEATHER_API_KEY` in a root `.env` file (gitignored). Opening `index.html` as a `file://` URL will not reach the function.
+Set `OPENWEATHER_API_KEY` in a root `.env` file (gitignored).
+
+### Why `file://` shows CORS errors
+
+If you double-click `index.html`, the page loads as `file://…` with origin `null`. The script requests `/.netlify/functions/weather`, which the browser resolves as `file:///.netlify/functions/weather` — not a real server. Browsers only allow `fetch` over **http** or **https**, so you see a CORS / `ERR_FAILED` message. **Auto** then falls back to your system light/dark preference until you use `netlify dev` or deploy to Netlify.
 
 ## Appearance modes
 

@@ -24,13 +24,15 @@ exports.handler = async function handler(event) {
     };
   }
 
-  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const apiKey =
+    process.env.OPENWEATHER_API_KEY || process.env.OPEN_WEATHER_API_KEY;
   if (!apiKey) {
     return {
       statusCode: 500,
       headers: { ...CORS, "Content-Type": "application/json" },
       body: JSON.stringify({
-        error: "Server is missing OPENWEATHER_API_KEY",
+        error:
+          "Server is missing OPENWEATHER_API_KEY (or OPEN_WEATHER_API_KEY)",
       }),
     };
   }

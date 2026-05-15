@@ -94,7 +94,16 @@
     });
   }
 
+  /** Weather proxy only exists on http(s) (Netlify dev or deploy), not file:// */
+  function canUseWeatherProxy() {
+    var p = window.location && window.location.protocol;
+    return p === "http:" || p === "https:";
+  }
+
   function fetchWeather(queryString) {
+    if (!canUseWeatherProxy()) {
+      return Promise.reject(new Error("weather unavailable (not http/https)"));
+    }
     var url = WEATHER_PATH + "?" + queryString;
     return fetch(url).then(function (res) {
       if (!res.ok) throw new Error("weather " + res.status);
@@ -138,6 +147,16 @@
 
   function startWeather() {
     if (typeof fetch !== "function") {
+      handleWeatherError();
+      return Promise.resolve();
+    }
+
+    if (!canUseWeatherProxy()) {
+      if (typeof console !== "undefined" && console.info) {
+        console.info(
+          "[about-me] Weather skipped: open via netlify dev (http://localhost:…), not file://"
+        );
+      }
       handleWeatherError();
       return Promise.resolve();
     }
