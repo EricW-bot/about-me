@@ -13,7 +13,7 @@
   var THEME_DAY = "day";
   var THEME_NIGHT = "night";
   var LEGACY_THEME_KEY = "about-me-theme";
-  var FALLBACK_CITY = "Melbourne,AU";
+  var FALLBACK_CITY = "Sydney,AU";
   var WEATHER_PATH = "/.netlify/functions/weather";
 
   var state = {
