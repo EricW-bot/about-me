@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* Design tokens — shared                                                    */
+/* Design tokens — shared                                                     */
 /* -------------------------------------------------------------------------- */
 :root {
   --font-sans: "Archivo", system-ui, sans-serif;
@@ -91,13 +91,11 @@ html[data-theme="night"] {
 
 html {
   scroll-behavior: smooth;
-  /* Sticky header uses top: 1rem; bar is min 72px tall — pad scroll targets so headings stay visible */
   scroll-padding-top: calc(1rem + 72px + 2px + 0.75rem);
 }
 
 @media (max-width: 639px) {
   html {
-    /* Sticky header + wrapped nav + appearance row */
     scroll-padding-top: calc(1rem + 200px + 0.75rem);
   }
 }
@@ -309,7 +307,7 @@ code {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Appearance (Auto / Day / Night)                                              */
+/* Appearance (Auto / Day / Night)                                            */
 /* -------------------------------------------------------------------------- */
 .appearance-segmented {
   flex-shrink: 0;
